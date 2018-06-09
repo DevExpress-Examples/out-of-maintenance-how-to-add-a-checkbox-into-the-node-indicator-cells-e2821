@@ -8,6 +8,7 @@ Imports System.Windows.Forms
 Imports DevExpress.XtraEditors
 Imports DevExpress.XtraEditors.Repository
 Imports DevExpress.XtraTreeList
+Imports DevExpress.Utils.Drawing
 
 Namespace WindowsApplication29
     Partial Public Class Form1
@@ -68,7 +69,7 @@ Namespace WindowsApplication29
         End Function
 
         Private Sub treeList1_CustomDrawNodeIndicator(ByVal sender As Object, ByVal e As DevExpress.XtraTreeList.CustomDrawNodeIndicatorEventArgs) Handles treeList1.CustomDrawNodeIndicator
-            DrawCheckBox(e.Graphics, e.Bounds, GetCheckValue(e.Node))
+            DrawCheckBox(e.Cache, e.Bounds, GetCheckValue(e.Node))
             e.Handled = True
         End Sub
 
@@ -85,10 +86,8 @@ Namespace WindowsApplication29
             Return Nothing
         End Function
 
-
-
         Private edit As RepositoryItemCheckEdit
-        Protected Sub DrawCheckBox(ByVal g As Graphics, ByVal r As Rectangle, ByVal Checked? As Boolean)
+        Protected Sub DrawCheckBox(ByVal cache As GraphicsCache, ByVal r As Rectangle, ByVal Checked? As Boolean)
             Dim info As DevExpress.XtraEditors.ViewInfo.CheckEditViewInfo
             Dim painter As DevExpress.XtraEditors.Drawing.CheckEditPainter
             Dim args As DevExpress.XtraEditors.Drawing.ControlGraphicsInfoArgs
@@ -96,10 +95,9 @@ Namespace WindowsApplication29
             painter = TryCast(edit.CreatePainter(), DevExpress.XtraEditors.Drawing.CheckEditPainter)
             info.EditValue = Checked
             info.Bounds = r
-            info.CalcViewInfo(g)
-            args = New DevExpress.XtraEditors.Drawing.ControlGraphicsInfoArgs(info, New DevExpress.Utils.Drawing.GraphicsCache(g), r)
+            info.CalcViewInfo()
+            args = New DevExpress.XtraEditors.Drawing.ControlGraphicsInfoArgs(info, cache, r)
             painter.Draw(args)
-            args.Cache.Dispose()
         End Sub
 
         Private Sub treeList1_MouseClick(ByVal sender As Object, ByVal e As MouseEventArgs) Handles treeList1.MouseClick
