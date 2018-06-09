@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraTreeList;
+using DevExpress.Utils.Drawing;
 
 namespace WindowsApplication29
 {
@@ -73,7 +74,7 @@ namespace WindowsApplication29
 
         private void treeList1_CustomDrawNodeIndicator(object sender, DevExpress.XtraTreeList.CustomDrawNodeIndicatorEventArgs e)
         {
-            DrawCheckBox(e.Graphics, e.Bounds, GetCheckValue(e.Node));
+            DrawCheckBox(e.Cache, e.Bounds, GetCheckValue(e.Node));
             e.Handled = true;
         }
 
@@ -88,11 +89,8 @@ namespace WindowsApplication29
             return null;
         }
 
-
-
         RepositoryItemCheckEdit edit;
-        protected void DrawCheckBox(Graphics g, Rectangle r, bool? Checked)
-        {
+        protected void DrawCheckBox(GraphicsCache cache, Rectangle r, bool? Checked) {
             DevExpress.XtraEditors.ViewInfo.CheckEditViewInfo info;
             DevExpress.XtraEditors.Drawing.CheckEditPainter painter;
             DevExpress.XtraEditors.Drawing.ControlGraphicsInfoArgs args;
@@ -100,10 +98,9 @@ namespace WindowsApplication29
             painter = edit.CreatePainter() as DevExpress.XtraEditors.Drawing.CheckEditPainter;
             info.EditValue = Checked;
             info.Bounds = r;
-            info.CalcViewInfo(g);
-            args = new DevExpress.XtraEditors.Drawing.ControlGraphicsInfoArgs(info, new DevExpress.Utils.Drawing.GraphicsCache(g), r);
+            info.CalcViewInfo();
+            args = new DevExpress.XtraEditors.Drawing.ControlGraphicsInfoArgs(info, cache, r);
             painter.Draw(args);
-            args.Cache.Dispose();
         }
 
         private void treeList1_MouseClick(object sender, MouseEventArgs e)
